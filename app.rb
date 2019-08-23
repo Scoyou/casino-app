@@ -18,7 +18,11 @@ def intro
   print "Enter your name: "
   name = gets.strip.capitalize
   print "Enter your age: "
-  age = gets.to_i
+  input = gets.strip
+  if is_valid_number?(input)
+    age = gets.to_i
+  else
+
   if age < 21
     puts "Sorry, but you must be 21 or older to enter."
     exit
@@ -47,7 +51,7 @@ def player_selection(choice)
   when 1
     play_slots
   when 2
-    high_low
+    # TODO high_low
   end
 end
 
@@ -55,7 +59,7 @@ def play_slots
   AnsciiArt.slots_art
   puts "Thanks for choosing the slots! Each spin is $1."
   puts "Get three matching values to win."
-  s = Slots.new('slot machine', 200)
+  s = Slots.new('slot machine', 15)
   s.spin
   @gambler.money -= 1
   puts "\n", @gambler.money
