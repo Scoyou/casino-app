@@ -18,11 +18,7 @@ def intro
   print "Enter your name: "
   name = gets.strip.capitalize
   print "Enter your age: "
-  input = gets.strip
-  if is_valid_number?(input)
-    age = gets.to_i
-  else
-
+  age = gets.to_i
   if age < 21
     puts "Sorry, but you must be 21 or older to enter."
     exit
@@ -33,6 +29,7 @@ def intro
     menu
   end
 end
+
 
 def menu
   puts "Which game would you like to play?"
