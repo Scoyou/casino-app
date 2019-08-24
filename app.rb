@@ -57,12 +57,11 @@ def play_slots
   puts "Thanks for choosing the slots! Each spin is $1."
   puts "Get three matching values to win."
   s = Slots.new('slot machine', 15)
+  puts "You currently have: $#{@gambler.money -= 1}"
   s.spin
-  @gambler.money -= 1
-  puts "\n", @gambler.money
   if s.win
     @gambler.money += s.jackpot
-    puts @gambler.money
+    puts "You currently have: $#{@gambler.money}"
   end
   puts "\nSpin again?"
   print '> '
