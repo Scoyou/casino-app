@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Start game player has a name and an initial bankroll
 # Player can go to different games via menu
 # Slots
@@ -5,22 +7,23 @@
 # Player places bet and wins / loses (hint: rand)
 # Player's bankroll goes up and down with wins and losses
 
-
 require 'pry'
 require_relative 'anscii_art'
 require_relative 'gambler'
 require_relative 'slots'
-
+require_relative 'deck'
+require_relative 'card'
+require_relative 'instructions'
 
 def intro
-  puts "As you enter the casino you are greeted by the doorsman."
+  puts 'As you enter the casino you are greeted by the doorsman.'
   puts '"May I see some Identification please?"'
-  print "Enter your name: "
+  print 'Enter your name: '
   name = gets.strip.capitalize
-  print "Enter your age: "
+  print 'Enter your age: '
   age = gets.to_i
   if age < 21
-    puts "Sorry, but you must be 21 or older to enter."
+    puts 'Sorry, but you must be 21 or older to enter.'
     exit
   else
     AnsciiArt.intro_art
@@ -30,9 +33,8 @@ def intro
   end
 end
 
-
 def menu
-  puts "Which game would you like to play?"
+  puts 'Which game would you like to play?'
   list_games
   print '> '
   choice = gets.to_i
@@ -48,14 +50,14 @@ def player_selection(choice)
   when 1
     play_slots
   when 2
-    # TODO high_low
+    play_high_low
   end
 end
 
 def play_slots
   AnsciiArt.slots_art
-  puts "Thanks for choosing the slots! Each spin is $1."
-  puts "Get three matching values to win."
+  puts 'Thanks for choosing the slots! Each spin is $1.'
+  puts 'Get three matching values to win.'
   s = Slots.new('slot machine', 15)
   puts "You currently have: $#{@gambler.money -= 1}"
   s.spin
@@ -81,5 +83,13 @@ def is_valid_number?(input)
     puts "#{input} is not a valid selection."
     return false
   end
+end
+
+def play_high_low
+  puts 'Thanks for choosing High / Low! Max bet: $1000. Min bet: $5'
+  puts 'would you like to view the instructions?'
+  input = gets.strip
+  Instructions.high_low_instructions if input.downcase == 'y'
+  deck = Deck.new
 end
 intro
