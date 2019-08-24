@@ -29,23 +29,46 @@ def intro
     AnsciiArt.intro_art
     puts "Welcome to the ruby casino, #{name}!"
     @gambler = Gambler.new(name, age)
-    menu
   end
 end
 
-def menu
+def main_menu
+  puts "what would you like to do?"
+  puts "1) Play games\n2) Check wallet\n3) Add money\n4) Exit"
+  print '> '
+  choice = gets.to_i
+  player_menu_selection(choice)
+end
+
+def player_menu_selection(choice)
+  case choice
+  when 1
+    game_menu
+  when 2
+    @gambler.check_wallet
+  when 3
+    @gambler.add_funds
+  when 4
+    goodbye
+  else
+    puts "Invalid selection!"
+    main_menu
+  end
+end
+
+def game_menu
   puts 'Which game would you like to play?'
   list_games
   print '> '
   choice = gets.to_i
-  player_selection(choice)
+  player_game_selection(choice)
 end
 
 def list_games
   puts "1) Slots\n2) High / Low"
 end
 
-def player_selection(choice)
+def player_game_selection(choice)
   case choice
   when 1
     play_slots
@@ -71,8 +94,19 @@ def play_slots
   if input.downcase == 'y'
     play_slots
   else
-    menu
+    main_menu
   end
+end
+
+def play_high_low
+  puts 'Thanks for choosing High / Low! Max bet: $1000. Min bet: $5'
+  puts 'would you like to view the instructions?'
+  input = gets.strip
+  Instructions.high_low_instructions if input.downcase == 'y'
+  deck = Deck.new
+  print 'Play again?(y/n): '
+  input == gets.strip
+  play_high_low if input.downcase == 'y'
 end
 
 def is_valid_number?(input)
@@ -85,11 +119,12 @@ def is_valid_number?(input)
   end
 end
 
-def play_high_low
-  puts 'Thanks for choosing High / Low! Max bet: $1000. Min bet: $5'
-  puts 'would you like to view the instructions?'
-  input = gets.strip
-  Instructions.high_low_instructions if input.downcase == 'y'
-  deck = Deck.new
+def goodbye
+  puts "Goodbye!"
+  exit
 end
+
 intro
+loop do
+  main_menu
+end
