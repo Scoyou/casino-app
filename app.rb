@@ -100,7 +100,20 @@ def play_slots
 end
 
 def play_roulette
-  #TODO roulette
+  puts 'Thanks for choosing Roulette!'
+  puts 'Would you like to view the instructions?'
+  input = gets.strip
+  if input.downcase == 'y'
+    Instructions.roulette
+  end
+  print 'How much would you like to bet? '
+  bet = gets.to_i
+  print 'Would you like to place a number bet for table numbers? '
+  input = gets.strip
+  if input.downcase == 'y'
+    # TODO number bets
+  end
+  game = Roulette.new(bet, numbers, zone, even_or_odd, color_bet)
 end
 
 def is_valid_number?(input)
