@@ -13,6 +13,7 @@ require_relative 'gambler'
 require_relative 'slots'
 require_relative 'deck'
 require_relative 'card'
+require_relative 'dice'
 require_relative 'instructions'
 
 def intro
@@ -73,7 +74,7 @@ def player_game_selection(choice)
   when 1
     play_slots
   when 2
-    play_high_low
+    play_roulette
   end
 end
 
@@ -98,15 +99,8 @@ def play_slots
   end
 end
 
-def play_high_low
-  puts 'Thanks for choosing High / Low! Max bet: $1000. Min bet: $5'
-  puts 'would you like to view the instructions?'
-  input = gets.strip
-  Instructions.high_low_instructions if input.downcase == 'y'
-  deck = Deck.new
-  print 'Play again?(y/n): '
-  input == gets.strip
-  play_high_low if input.downcase == 'y'
+def play_roulette
+  #TODO roulette
 end
 
 def is_valid_number?(input)
