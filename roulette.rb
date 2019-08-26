@@ -40,37 +40,71 @@ class Roulette
     wheel
     number = @wheel.sample
     if number == '0' || number == '00'
-      print 'Green: ', number.to_s.colorize(:green)
-      @color = 'green'
+      print 'Green: '.colorize(:green), "#{number}\n"
+      color = 'green'
     elsif number.to_i.odd?
-      print 'Red: ', number.to_s.colorize(:red)
-      @color = 'red'
+      print 'Red: '.colorize(:red), "#{number}\n"
+      color = 'red'
     elsif number.to_i.even?
-      print 'Black: ', number.to_s.colorize(:white)
-      @color = 'black'
+      print 'Black: '.colorize(:white), "#{number}\n"
+      color = 'black'
     else
       raise 'Error: no result in spin_wheel'.colorize(:yellow)
     end
-    evaluate_color(number)
+
+    evaluate_color(color, number) unless @color_bet.nil?
+    evaluate_even_odd(number) unless @even_or_odd.nil?
+    zone(number) unless @zone.nil?
+    table_numbers(number) unless @player_numbers.nil?
   end
 
-  def evaluate_color(_number)
+  def evaluate_color(color, _number)
     color_bet = @color_bet.downcase
-    if @color.match?(color_bet)
+    if color.match?(color_bet)
       puts 'You guessed the right color!'
       true
     end
   end
 
-  def evaluate_even_odd(_number)
+  def evaluate_even_odd(number)
     case @even_or_odd
     when 'even'
-      true if number.even?
+      if number.to_i.even?
+        puts 'Number was even!'
+        true
+      end
     when 'odd'
-      true if number.odd?
+      if number.to_i.odd?
+        puts 'Number was odd!'
+        true
+      end
+    else
+      false
+    end
+  end
+
+  def zone(number)
+    num = number.to_i
+    case num
+    when 1..12
+      zone = 1
+    when 13..22
+      zone = 2
+    when 23..34
+      zone = 3
+    end
+
+    puts "You guessed zone #{@zone} correctly!" if zone == @zone
+  end
+
+  def table_numbers(number)
+    num = number.to_i
+    if @player_numbers.include?(num)
+      puts "You guessed #{num} as one of your table numbers!"
     end
   end
 end
 
-r = Roulette.new(40)
+player_numbers = [4, 5, 6, 10, 20]
+r = Roulette.new(40, player_numbers, 1, 'even', 'black')
 r.spin_wheel
