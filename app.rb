@@ -146,6 +146,13 @@ def get_bets
   else
     @even_or_odd = nil
   end
+  print 'Would you like to place a number bet for a certain zone(Y/N)? '
+  input = gets.chomp
+  if input.downcase == 'y'
+    zone
+  else
+    @player_zone = nil
+  end
 end
 
 def select_table_numbers
