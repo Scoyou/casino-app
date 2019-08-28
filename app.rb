@@ -126,7 +126,6 @@ def place_table_bet
   print 'Would you like to place a number bet for table numbers(Y/N)? '
   input = gets.chomp
   if yes_no_validator(input)
-    selection = input
     input.downcase == 'y' ? select_table_numbers : @player_numbers = nil
   else
     place_table_bet
@@ -137,7 +136,6 @@ def place_number_bet
   print 'Would you like to place a number bet for a certain color(Y/N)? '
   input = gets.chomp
   if yes_no_validator(input)
-    selection = input
     input.downcase == 'y' ? bet_on_colors : @player_color = nil
   else
     place_number_bet
@@ -148,7 +146,6 @@ def place_even_odd_bet
   print 'Would you like to place a number bet for even or odd(Y/N)? '
   input = gets.chomp
   if yes_no_validator(input)
-    selection = input
     input.downcase == 'y' ? even_or_odd : @even_or_odd = nil
   else
     place_even_odd_bet
@@ -159,7 +156,6 @@ def place_zone_bet
   print 'Would you like to place a number bet for a certain zone(Y/N)? '
   input = gets.chomp
   if yes_no_validator(input)
-    selection = input
     input.downcase == 'y' ? zone : @player_zone = nil
   else
     place_zone_bet
