@@ -107,22 +107,34 @@
 
 # ---- Works below
 
+
 def menu
-  puts 'Would you like the play a game?'
-  puts 'Press Y for Yes and N for No'
-  @menu_choice = gets.chomp.downcase
-  if menu_choice == "y"
-    continue_game
-  elsif menu_choice == "n"
+  puts 'Welcome to the Game of 21 Table!'
+  sleep(1)
+  puts 'Please choose an option:'
+  sleep(1)
+  puts '1) Play Game'
+  puts '2) Bet some monies!'
+  puts '3) Back to Menu'
+end
+menu
+
+def options
+  options = gets.to_i
+  if options == "1"
+    play_game
+  elsif options == "2"
+    bet_money
+  elsif options == "3"
     back_to_menu
   else
     puts 'Invalid input, try again'
   end
 end
+options
 menu
 
-def bet
-  puts"Welcome to the Game of 21 Table!"
+def bet_money
   puts "How much total money would you like to play with today? "
  cash = gets.chomp.to_i
   puts "Total cash:  $#{cash}"
@@ -130,7 +142,8 @@ def bet
   bet = gets.chomp.to_i
   cash -= bet
 end
-  
+
+  menu
   def deal_card
     rand(11)+1
   end
