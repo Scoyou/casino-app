@@ -93,6 +93,6 @@ class Roulette
 
   def table_numbers(number)
     @table_win = @player_numbers.include?(number) ? true : false
-    puts "You guessed #{num} as one of your table numbers!" if @table_win
+    puts "You guessed #{number} as one of your table numbers!" if @table_win
   end
 end

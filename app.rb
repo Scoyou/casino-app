@@ -192,7 +192,7 @@ def select_table_numbers
   until @player_numbers.size == 6
     print '> '
     input = gets.chomp
-    pattern = /^[1-9]$|^[1-2][0-9]$|^3[0-6]$/
+    pattern = /^[0-9]$|^[1-2][0-9]$|^3[0-6]$/
     pattern.match?(input) ? @player_numbers << input : select_table_numbers
   end
 end
