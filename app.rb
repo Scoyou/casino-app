@@ -173,7 +173,7 @@ end
 def place_even_odd_bet
   print 'Would you like to place a number bet for even or odd(Y/N)? '
   input = gets.chomp
-  yes_no_validator(input) ? (input.downcase == 'y' ? even_or_odd :
+  input.is_y_or_n? ? (input.downcase == 'y' ? even_or_odd :
                             @even_or_odd = nil) :
                             place_even_odd_bet
 end
