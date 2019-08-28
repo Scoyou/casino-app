@@ -104,7 +104,3 @@ class Roulette
     end
   end
 end
-
-player_numbers = [4, 5, 6, 10, 20]
-r = Roulette.new(40, player_numbers, 1, 'even', 'black')
-r.spin_wheel

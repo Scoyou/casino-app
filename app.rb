@@ -11,10 +11,8 @@ require 'pry'
 require_relative 'anscii_art'
 require_relative 'gambler'
 require_relative 'slots'
-require_relative 'deck'
-require_relative 'card'
-require_relative 'dice'
 require_relative 'instructions'
+require_relative 'roulette'
 
 def intro
   puts 'As you enter the casino you are greeted by the doorsman.'
@@ -34,7 +32,7 @@ def intro
 end
 
 def main_menu
-  puts "what would you like to do?"
+  puts 'what would you like to do?'
   puts "1) Play games\n2) Check wallet\n3) Add money\n4) Exit"
   print '> '
   choice = gets.to_i
@@ -52,7 +50,7 @@ def player_menu_selection(choice)
   when 4
     goodbye
   else
-    puts "Invalid selection!"
+    puts 'Invalid selection!'
     main_menu
   end
 end
@@ -66,7 +64,7 @@ def game_menu
 end
 
 def list_games
-  puts "1) Slots\n2) High / Low"
+  puts "1) Slots\n2) Roulette"
 end
 
 def player_game_selection(choice)
@@ -102,19 +100,67 @@ end
 def play_roulette
   puts 'Thanks for choosing Roulette!'
   puts 'Would you like to view the instructions?'
-  input = gets.strip
-  if input.downcase == 'y'
-    Instructions.roulette
-  end
+  input = gets.chomp
+  Instructions.roulette if input.downcase == 'y'
   print 'How much would you like to bet? '
   bet = gets.to_i
-  print 'Would you like to place a number bet for table numbers? '
-  input = gets.strip
+  print 'Would you like to place a number bet for table numbers(Y/N)? '
+  input = gets.chomp
   if input.downcase == 'y'
-    # TODO number bets
+    select_table_numbers
+  else
+    @roulette_numbers = nil
   end
-  game = Roulette.new(bet, numbers, zone, even_or_odd, color_bet)
+  print 'Would you like to place a number bet for a certain color(Y/N)? '
+  input = gets.chomp
+  if input.downcase == 'y'
+    bet_on_colors
+  else
+    @player_color = nil
+  end
+  print 'Would you like to place a number bet for even or odd(Y/N)? '
+  input = gets.chomp
+  if input.downcase == 'y'
+    even_or_odd
+  else
+    @even_or_odd = nil
+  end
+  game = Roulette.new(bet,
+                      @roulette_numbers,
+                      @player_zone,
+                      @even_or_odd,
+                      @player_color)
+  game.spin_wheel
 end
+
+def select_table_numbers
+  @roulette_numbers = []
+  puts 'Which numbers would you like to bet on?'
+  print '> '
+  selection = gets.chomp
+  until @roulette_numbers.size == 6
+    print '> '
+    if is_valid_number?(selection)
+      @roulette_numbers << gets.to_i
+    end
+  end
+end
+
+def bet_on_colors
+  puts "Please type a color (red, green, or black):"
+  @player_color = gets.chomp
+end
+
+def zone
+  puts "Which zone are you betting on?(1, 2, or 3):"
+  @player_zone = gets.to_i
+end
+
+def even_or_odd
+  print "Even or odd? "
+  @even_or_odd = gets.chomp
+end
+
 
 def is_valid_number?(input)
   pattern = /^\d*\.?\d+$/
@@ -127,7 +173,7 @@ def is_valid_number?(input)
 end
 
 def goodbye
-  puts "Goodbye!"
+  puts 'Goodbye!'
   exit
 end
 
