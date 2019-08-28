@@ -204,7 +204,7 @@ end
 def even_or_odd
   print 'Even or odd? '
   input = gets.chomp.downcase
-  pattern = /even|odd|/
+  pattern = /even|odd/
   valid = pattern.match?(input) ? (@even_or_odd = input) : false
   even_or_odd if !valid
 end
