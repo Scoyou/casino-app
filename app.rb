@@ -195,7 +195,7 @@ end
 
 def zone
   puts "Zones are: 1) 1-12\n2) 13-22\n3) 23-34"
-  print 'Which zone are you betting on?(1, 2, or 3):'
+  print 'Which zone would you like to bet on?(1, 2, or 3): '
   input = gets.chomp
   pattern = /[1-3]/
   valid = pattern.match?(input) ? (@player_zone = input) : false
