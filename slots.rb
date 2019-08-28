@@ -59,9 +59,7 @@ class Slots
   end
 
   def winning_numbers(spin1, spin2, spin3)
-    if spin1 == spin2 && spin2 == spin3
-      puts "\nYou win!"
-      @win = true
-     end
+    @win = (spin1 == spin2 && spin2 == spin3) ? true : false
+    puts "\nYou win!" if @win
   end
 end

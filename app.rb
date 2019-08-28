@@ -86,10 +86,23 @@ def play_slots
     @gambler.money += slot.jackpot
     puts "You currently have: $#{@gambler.money}"
   end
-  puts "\nSpin again?"
+  ask_to_play_again('slots')
+end
+
+def ask_to_play_again(game)
+  puts "\nPlay again?"
   print '> '
   input = gets.strip
-  input.downcase == 'y' ? play_slots : main_menu
+  if yes_no_validator(input)
+    case game
+    when 'slots'
+      input.downcase == 'y' ? play_slots : main_menu
+    when 'roulette'
+      input.downcase == 'y' ? play_roulette : main_menu
+    end
+  else
+    ask_to_play_again
+  end
 end
 
 def play_roulette
@@ -107,59 +120,57 @@ def play_roulette
   game.spin_wheel
   evaluate_winnings(game)
   puts "money after winnings is #{@gambler.money}"
-  puts "\nPlay again?"
-  print '> '
-  input = gets.strip
-  input.downcase == 'y' ? play_roulette : main_menu
+  ask_to_play_again('roulette')
 end
 
 def get_bets
-  print 'How much would you like to bet? '
-  @roulette_bet = gets.to_i
+  set_bet_amount
   place_table_bet
   place_number_bet
   place_even_odd_bet
   place_zone_bet
 end
 
+def set_bet_amount
+  print 'How much would you like to bet? '
+  input = gets.chomp
+  is_valid_number?(input) ? (@roulette_bet = input.to_i) : set_bet_amount
+end
+
 def place_table_bet
   print 'Would you like to place a number bet for table numbers(Y/N)? '
   input = gets.chomp
-  if yes_no_validator(input)
-    input.downcase == 'y' ? select_table_numbers : @player_numbers = nil
-  else
-    place_table_bet
-  end
+  # if input is either 'y' or 'n',
+  # check if input is 'y.' If so, call select_table_numbers.
+  # If not, set @player_numbers = nil
+  # otherwise recursive call place_table_bet
+  yes_no_validator(input) ? (input.downcase == 'y' ? select_table_numbers :
+                            @player_numbers = nil) :
+                            place_table_bet
 end
 
 def place_number_bet
   print 'Would you like to place a number bet for a certain color(Y/N)? '
   input = gets.chomp
-  if yes_no_validator(input)
-    input.downcase == 'y' ? bet_on_colors : @player_color = nil
-  else
-    place_number_bet
-  end
+  yes_no_validator(input) ? (input.downcase == 'y' ? bet_on_colors :
+                            @player_color = nil) :
+                            place_number_bet
 end
 
 def place_even_odd_bet
   print 'Would you like to place a number bet for even or odd(Y/N)? '
   input = gets.chomp
-  if yes_no_validator(input)
-    input.downcase == 'y' ? even_or_odd : @even_or_odd = nil
-  else
-    place_even_odd_bet
-  end
+  yes_no_validator(input) ? (input.downcase == 'y' ? even_or_odd :
+                            @even_or_odd = nil) :
+                            place_even_odd_bet
 end
 
 def place_zone_bet
   print 'Would you like to place a number bet for a certain zone(Y/N)? '
   input = gets.chomp
-  if yes_no_validator(input)
-    input.downcase == 'y' ? zone : @player_zone = nil
-  else
-    place_zone_bet
-  end
+  yes_no_validator(input) ? (input.downcase == 'y' ? zone :
+                            @player_zone = nil) :
+                            place_zone_bet
 end
 
 def select_table_numbers
@@ -175,18 +186,27 @@ def select_table_numbers
 end
 
 def bet_on_colors
-  puts 'Please type a color (red, green, or black):'
-  @player_color = gets.chomp
+  print 'Please type a color (red, green, or black):'
+  input = gets.chomp.downcase
+  pattern = /black|red|green/
+  valid = pattern.match?(input) ? (@player_numbers = input) : false
+  bet_on_colors if !valid
 end
 
 def zone
-  puts 'Which zone are you betting on?(1, 2, or 3):'
-  @player_zone = gets.to_i
+  print 'Which zone are you betting on?(1, 2, or 3):'
+  input = gets.to_i
+  pattern = /1|2|3/
+  valid = pattern.match?(input) ? (@player_zone = input) : false
+  zone if !valid
 end
 
 def even_or_odd
   print 'Even or odd? '
-  @even_or_odd = gets.chomp.downcase
+  input = gets.chomp.downcase
+  pattern = /even|odd|/
+  valid = pattern.match?(input) ? (@even_or_odd = input) : false
+  even_or_odd if !valid
 end
 
 def evaluate_winnings(game)
