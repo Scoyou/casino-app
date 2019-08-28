@@ -111,7 +111,7 @@ def ask_to_play_again(game)
       input.downcase == 'y' ? play_roulette : main_menu
     end
   else
-    ask_to_play_again
+    ask_to_play_again(game)
   end
 end
 
