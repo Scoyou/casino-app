@@ -54,11 +54,11 @@ class Slots
       spin3 = @spin_options[2]
       print "#{spin3} "
     end
-
+    puts "\n"
     winning_numbers(spin1, spin2, spin3)
   end
 
   def winning_numbers(spin1, spin2, spin3)
-    puts "\nYou win!" if @win = spin1 == spin2 && spin2 == spin3 ? true : false
+    puts "You win!" if @win = spin1 == spin2 && spin2 == spin3 ? true : false
   end
 end

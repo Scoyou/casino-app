@@ -35,9 +35,7 @@ def validate_age
   pattern = /[0-9]|[0-9][0-9]/
   valid_age = pattern.match?(input)
   # is age is valid and is a number @age = input to int. Otherwise validate age
-  valid_age ? is_valid_number?(input) ? @age = input.to_i :
-                                        validate_age :
-                                        validate_age
+  valid_age ? (is_valid_number?(input) ? @age = input.to_i : validate_age) : validate_age
 end
 
 def main_menu
@@ -51,7 +49,7 @@ end
 def player_menu_selection(choice)
   case choice
   when 1
-    game_menu
+    @gambler.out_of_money? ? (puts 'You dont have any money left!') : game_menu
   when 2
     @gambler.check_wallet
   when 3
@@ -79,9 +77,10 @@ end
 def player_game_selection(choice)
   case choice
   when 1
-    play_slots
+    @gambler.out_of_money? ? (puts 'You dont have any money left!') : play_slots
   when 2
-    play_roulette
+    @gambler.out_of_money? ? (puts 'You dont have any money left!') : play_roulette
+  when 2
   end
 end
 
@@ -96,7 +95,8 @@ def play_slots
     @gambler.money += slot.jackpot
     puts "You currently have: $#{@gambler.money}"
   end
-  ask_to_play_again('slots')
+  @gambler.out_of_money? ? (puts 'You dont have any money left!') :
+                            ask_to_play_again('slots')
 end
 
 def ask_to_play_again(game)
@@ -130,7 +130,8 @@ def play_roulette
   game.spin_wheel
   evaluate_winnings(game)
   puts "money after winnings is #{@gambler.money}"
-  ask_to_play_again('roulette')
+  @gambler.out_of_money? ? (puts 'You dont have any money left!') :
+                            ask_to_play_again('roulette')
 end
 
 def get_bets
@@ -186,12 +187,11 @@ end
 def select_table_numbers
   @player_numbers = []
   puts 'Enter 6 numbers you would like to bet on: '
-  print '> '
-  selection = gets.chomp
-  until @player_numbers.size == 5
+  until @player_numbers.size == 6
     print '> '
-    is_valid_number?(selection) ? (@player_numbers << gets.to_i) :
-                                   select_table_numbers
+    input = gets.chomp
+    pattern = /^[1-9]$|^[1-2][0-9]$|^3[0-6]$/
+    pattern.match?(input) ? @player_numbers << input : select_table_numbers
   end
 end
 
@@ -200,7 +200,7 @@ def bet_on_colors
   input = gets.chomp.downcase
   pattern = /black|red|green/
   valid = pattern.match?(input) ? (@player_numbers = input) : false
-  bet_on_colors if !valid
+  bet_on_colors unless valid
 end
 
 def zone
@@ -209,7 +209,7 @@ def zone
   input = gets.chomp
   pattern = /[1-3]/
   valid = pattern.match?(input) ? (@player_zone = input) : false
-  zone if !valid
+  zone unless valid
 end
 
 def even_or_odd
@@ -217,7 +217,7 @@ def even_or_odd
   input = gets.chomp.downcase
   pattern = /even|odd/
   valid = pattern.match?(input) ? (@even_or_odd = input) : false
-  even_or_odd if !valid
+  even_or_odd unless valid
 end
 
 def evaluate_winnings(game)
