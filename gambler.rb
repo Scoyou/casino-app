@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require_relative 'string'
 
 class Gambler
   attr_accessor :name, :age, :money
@@ -12,7 +13,7 @@ class Gambler
   def get_starting_funds
     print 'How much money do you have?: '
     input = gets.chomp
-    until is_valid_number?(input)
+    until input.is_valid_number?
       print 'How much money do you have?: '
       input = gets.chomp
     end
@@ -31,7 +32,7 @@ class Gambler
   def add_funds
     print 'How much money would you like to add?: '
     input = gets.chomp
-    until is_valid_number?(input)
+    until input.is_valid_number?
       print 'How much money would you like to add?: '
       input = gets.chomp
     end

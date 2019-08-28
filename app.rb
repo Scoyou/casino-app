@@ -12,6 +12,7 @@ require_relative 'gambler'
 require_relative 'slots'
 require_relative 'instructions'
 require_relative 'roulette'
+require_relative 'string'
 
 def intro
   puts 'As you enter the casino you are greeted by the doorsman.'
@@ -35,7 +36,7 @@ def validate_age
   pattern = /[0-9]|[0-9][0-9]/
   valid_age = pattern.match?(input)
   # if age is valid and is a number @age = input to int. Otherwise validate age
-  valid_age ? (is_valid_number?(input) ? @age = input.to_i : validate_age) : validate_age
+  valid_age ? (input.is_valid_number? ? @age = input.to_i : validate_age) : validate_age
 end
 
 def main_menu
@@ -104,7 +105,7 @@ def ask_to_play_again(game)
   puts "\nPlay again?"
   print '> '
   input = gets.strip
-  if yes_no_validator(input)
+  if input.is_y_or_n?
     case game
     when 'slots'
       input.downcase == 'y' ? play_slots : main_menu
@@ -146,7 +147,7 @@ end
 def set_bet_amount
   print 'How much would you like to bet? '
   input = gets.chomp
-  is_valid_number?(input) ? (@roulette_bet = input.to_i) : set_bet_amount
+  input.is_valid_number? ? (@roulette_bet = input.to_i) : set_bet_amount
 end
 
 def place_table_bet
@@ -156,7 +157,7 @@ def place_table_bet
   # check if input is 'y.' If so, call select_table_numbers.
   # If not, set @player_numbers = nil
   # otherwise recursive call place_table_bet
-  yes_no_validator(input) ? (input.downcase == 'y' ? select_table_numbers :
+  input.is_y_or_n? ? (input.downcase == 'y' ? select_table_numbers :
                             @player_numbers = nil) :
                             place_table_bet
 end
@@ -164,7 +165,7 @@ end
 def place_number_bet
   print 'Would you like to place a number bet for a certain color(Y/N)? '
   input = gets.chomp
-  yes_no_validator(input) ? (input.downcase == 'y' ? bet_on_colors :
+  input.is_y_or_n? ? (input.downcase == 'y' ? bet_on_colors :
                             @player_color = nil) :
                             place_number_bet
 end
@@ -180,7 +181,7 @@ end
 def place_zone_bet
   print 'Would you like to place a number bet for a certain zone(Y/N)? '
   input = gets.chomp
-  yes_no_validator(input) ? (input.downcase == 'y' ? zone :
+  input.is_y_or_n? ? (input.downcase == 'y' ? zone :
                             @player_zone = nil) :
                             place_zone_bet
 end
@@ -237,26 +238,6 @@ def evaluate_winnings(game)
   unless @player_color.nil?
     game.color_win ? (@gambler.money += game.bet) :
                      (@gambler.money -= game.bet)
-  end
-end
-
-def is_valid_number?(input)
-  pattern = /^\d*\.?\d+$/
-  if pattern.match?(input)
-    return true
-  else
-    puts "#{input} is not a valid selection."
-    return false
-  end
-end
-
-def yes_no_validator(input)
-  pattern = /y|n/
-  if pattern.match?(input)
-    return true
-  else
-    puts "#{input} is not a valid selection."
-    return false
   end
 end
 
