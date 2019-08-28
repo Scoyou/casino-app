@@ -34,7 +34,7 @@ def validate_age
   input = gets.chomp
   pattern = /[0-9]|[0-9][0-9]/
   valid_age = pattern.match?(input)
-  # is age is valid and is a number @age = input to int. Otherwise validate age
+  # if age is valid and is a number @age = input to int. Otherwise validate age
   valid_age ? (is_valid_number?(input) ? @age = input.to_i : validate_age) : validate_age
 end
 
@@ -80,7 +80,8 @@ def player_game_selection(choice)
     @gambler.out_of_money? ? (puts 'You dont have any money left!') : play_slots
   when 2
     @gambler.out_of_money? ? (puts 'You dont have any money left!') : play_roulette
-  when 2
+  else
+    puts 'Invalid selection'
   end
 end
 
