@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class String
   def is_valid_number?
     pattern = /^\d*\.?\d+$/
     if pattern.match?(self)
       return true
     else
-      puts "Not a valid selection."
+      puts 'Not a valid selection.'
       return false
     end
   end
@@ -14,7 +16,7 @@ class String
     if pattern.match?(self)
       return true
     else
-      puts "Not a valid selection."
+      puts 'Not a valid selection.'
       return false
     end
   end
