@@ -9,19 +9,22 @@ class Roulette
                 :numbers,
                 :zone,
                 :even_or_odd,
-                :color_bet
+                :color_bet,
+                :table_win,
+                :even_odd_win,
+                :color_win,
+                :zone_win
 
-  def initialize(bet,
-                 numbers = nil,
-                 zone = nil,
-                 even_or_odd = nil,
-                 color_bet = nil)
-
+  def initialize(bet, numbers, zone, even_or_odd, color_bet)
     @bet = bet
     @player_numbers = numbers
     @zone = zone
     @even_or_odd = even_or_odd
     @color_bet = color_bet
+    @table_win = false
+    @zone_win = false
+    @color_win = false
+    @even_odd_win = false
   end
 
   def wheel
@@ -62,7 +65,7 @@ class Roulette
     color_bet = @color_bet.downcase
     if color.match?(color_bet)
       puts 'You guessed the right color!'
-      true
+      @color_win = true
     end
   end
 
@@ -71,15 +74,13 @@ class Roulette
     when 'even'
       if number.to_i.even?
         puts 'Number was even!'
-        true
+        @even_odd_win = true
       end
     when 'odd'
       if number.to_i.odd?
         puts 'Number was odd!'
-        true
+        @even_odd_win = true
       end
-    else
-      false
     end
   end
 
@@ -94,13 +95,17 @@ class Roulette
       zone = 3
     end
 
-    puts "You guessed zone #{@zone} correctly!" if zone == @zone
+    if zone == @zone
+      puts "You guessed zone #{@zone} correctly!"
+      @zone_win = true
+    end
   end
 
   def table_numbers(number)
     num = number.to_i
     if @player_numbers.include?(num)
       puts "You guessed #{num} as one of your table numbers!"
+      @table_win = true
     end
   end
 end

@@ -99,17 +99,38 @@ end
 
 def play_roulette
   puts 'Thanks for choosing Roulette!'
-  puts 'Would you like to view the instructions?'
+  print 'Would you like to view the instructions(Y/N)? '
   input = gets.chomp
+  puts "\n"
   Instructions.roulette if input.downcase == 'y'
+  get_bets
+  game = Roulette.new(@roulette_bet,
+                      @roulette_numbers,
+                      @player_zone,
+                      @even_or_odd,
+                      @player_color)
+  game.spin_wheel
+  evaluate_winnings(game)
+  puts "money after winnings is #{@gambler.money}"
+  puts "\nPlay again?"
+  print '> '
+  input = gets.strip
+  if input.downcase == 'y'
+    play_roulette
+  else
+    main_menu
+  end
+end
+
+def get_bets
   print 'How much would you like to bet? '
-  bet = gets.to_i
+  @roulette_bet = gets.to_i
   print 'Would you like to place a number bet for table numbers(Y/N)? '
   input = gets.chomp
   if input.downcase == 'y'
     select_table_numbers
   else
-    @roulette_numbers = nil
+    @player_numbers = nil
   end
   print 'Would you like to place a number bet for a certain color(Y/N)? '
   input = gets.chomp
@@ -125,42 +146,72 @@ def play_roulette
   else
     @even_or_odd = nil
   end
-  game = Roulette.new(bet,
-                      @roulette_numbers,
-                      @player_zone,
-                      @even_or_odd,
-                      @player_color)
-  game.spin_wheel
 end
 
 def select_table_numbers
-  @roulette_numbers = []
-  puts 'Which numbers would you like to bet on?'
+  @player_numbers = []
+  puts 'Enter 6 numbers you would like to bet on: '
   print '> '
   selection = gets.chomp
-  until @roulette_numbers.size == 6
+  until @player_numbers.size == 5
     print '> '
-    if is_valid_number?(selection)
-      @roulette_numbers << gets.to_i
-    end
+    @player_numbers << gets.to_i if is_valid_number?(selection)
   end
 end
 
 def bet_on_colors
-  puts "Please type a color (red, green, or black):"
+  puts 'Please type a color (red, green, or black):'
   @player_color = gets.chomp
 end
 
 def zone
-  puts "Which zone are you betting on?(1, 2, or 3):"
+  puts 'Which zone are you betting on?(1, 2, or 3):'
   @player_zone = gets.to_i
 end
 
 def even_or_odd
-  print "Even or odd? "
+  print 'Even or odd? '
   @even_or_odd = gets.chomp
 end
 
+def evaluate_winnings(game)
+  unless @player_numbers.nil?
+    if game.table_win
+      @gambler.money += (game.bet * 35)
+      puts "table win #{@gambler.money}"
+    else
+      @gambler.money -= game.bet
+      puts "table loss #{@gambler.money}"
+    end
+  end
+  unless @player_zone.nil?
+    if game.zone_win
+      @gambler.money += game.bet
+      puts "zone win #{@gambler.money}"
+    else
+      @gambler.money -= game.bet
+      puts "zone loss #{@gambler.money}"
+    end
+  end
+  unless @even_or_odd.nil?
+    if game.even_odd_win
+      @gambler.money += game.bet
+      puts "even odd win #{@gambler.money}"
+    else
+      @gambler.money -= game.bet
+      puts "even odd loss #{@gambler.money}"
+    end
+  end
+  unless @player_color.nil?
+    if game.color_win
+      @gambler.money += game.bet
+      puts "color win #{@gambler.money}"
+    else
+      @gambler.money -= game.bet
+      puts "color loss #{@gambler.money}"
+    end
+  end
+end
 
 def is_valid_number?(input)
   pattern = /^\d*\.?\d+$/
