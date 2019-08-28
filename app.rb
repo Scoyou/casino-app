@@ -7,7 +7,6 @@
 # Player places bet and wins / loses (hint: rand)
 # Player's bankroll goes up and down with wins and losses
 
-require 'pry'
 require_relative 'anscii_art'
 require_relative 'gambler'
 require_relative 'slots'
@@ -117,18 +116,54 @@ end
 def get_bets
   print 'How much would you like to bet? '
   @roulette_bet = gets.to_i
+  place_table_bet
+  place_number_bet
+  place_even_odd_bet
+  place_zone_bet
+end
+
+def place_table_bet
   print 'Would you like to place a number bet for table numbers(Y/N)? '
   input = gets.chomp
-  input.downcase == 'y' ? select_table_numbers : @player_numbers = nil
+  if yes_no_validator(input)
+    selection = input
+    input.downcase == 'y' ? select_table_numbers : @player_numbers = nil
+  else
+    place_table_bet
+  end
+end
+
+def place_number_bet
   print 'Would you like to place a number bet for a certain color(Y/N)? '
   input = gets.chomp
-  input.downcase == 'y' ? bet_on_colors : @player_color = nil
+  if yes_no_validator(input)
+    selection = input
+    input.downcase == 'y' ? bet_on_colors : @player_color = nil
+  else
+    place_number_bet
+  end
+end
+
+def place_even_odd_bet
   print 'Would you like to place a number bet for even or odd(Y/N)? '
   input = gets.chomp
-  input.downcase == 'y' ? even_or_odd : @even_or_odd = nil
+  if yes_no_validator(input)
+    selection = input
+    input.downcase == 'y' ? even_or_odd : @even_or_odd = nil
+  else
+    place_even_odd_bet
+  end
+end
+
+def place_zone_bet
   print 'Would you like to place a number bet for a certain zone(Y/N)? '
   input = gets.chomp
-  input.downcase == 'y' ? zone : @player_zone = nil
+  if yes_no_validator(input)
+    selection = input
+    input.downcase == 'y' ? zone : @player_zone = nil
+  else
+    place_zone_bet
+  end
 end
 
 def select_table_numbers
@@ -182,6 +217,16 @@ end
 
 def is_valid_number?(input)
   pattern = /^\d*\.?\d+$/
+  if pattern.match?(input)
+    return true
+  else
+    puts "#{input} is not a valid selection."
+    return false
+  end
+end
+
+def yes_no_validator(input)
+  pattern = /y|n/
   if pattern.match?(input)
     return true
   else
