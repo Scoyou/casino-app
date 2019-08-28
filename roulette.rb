@@ -18,7 +18,7 @@ class Roulette
   def initialize(bet, numbers, zone, even_or_odd, color_bet)
     @bet = bet
     @player_numbers = numbers
-    @zone = zone
+    @zone = zone.to_i
     @even_or_odd = even_or_odd
     @color_bet = color_bet
     @table_win = false
@@ -88,8 +88,7 @@ class Roulette
       zone = 3
     end
 
-    @zone_win = zone == @zone
-    puts "You guessed zone #{@zone} correctly!" if @zone_win
+    puts "You guessed zone #{@zone} correctly!" if @zone_win = zone == @zone
   end
 
   def table_numbers(number)
