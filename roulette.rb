@@ -63,25 +63,18 @@ class Roulette
 
   def evaluate_color(color, _number)
     color_bet = @color_bet.downcase
-    if color.match?(color_bet)
-      puts 'You guessed the right color!'
-      @color_win = true
-    end
+    @color_win = color.match?(color_bet) ? true : false
+    puts 'You guessed the right color!' if @color_win
   end
 
   def evaluate_even_odd(number)
     case @even_or_odd
     when 'even'
-      if number.to_i.even?
-        puts 'Number was even!'
-        @even_odd_win = true
-      end
+      @even_odd_win = number.to_i.even? ? true : false
     when 'odd'
-      if number.to_i.odd?
-        puts 'Number was odd!'
-        @even_odd_win = true
-      end
+      @even_odd_win = number.to_i.odd? ? true : false
     end
+    puts "Number was #{@even_or_odd}!" if @even_odd_win
   end
 
   def zone(number)
@@ -95,17 +88,13 @@ class Roulette
       zone = 3
     end
 
-    if zone == @zone
-      puts "You guessed zone #{@zone} correctly!"
-      @zone_win = true
-    end
+    @zone_win = zone == @zone
+    puts "You guessed zone #{@zone} correctly!" if @zone_win
   end
 
   def table_numbers(number)
     num = number.to_i
-    if @player_numbers.include?(num)
-      puts "You guessed #{num} as one of your table numbers!"
-      @table_win = true
-    end
+    @table_win = @player_numbers.include?(num) ? true : false
+    puts "You guessed #{num} as one of your table numbers!" if @table_win
   end
 end

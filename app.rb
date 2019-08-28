@@ -80,21 +80,17 @@ def play_slots
   AnsciiArt.slots_art
   puts 'Thanks for choosing the slots! Each spin is $1.'
   puts 'Get three matching values to win.'
-  s = Slots.new('slot machine', 15)
+  slot = Slots.new('slot machine', 15)
   puts "You currently have: $#{@gambler.money -= 1}"
-  s.spin
-  if s.win
-    @gambler.money += s.jackpot
+  slot.spin
+  if slot.win
+    @gambler.money += slot.jackpot
     puts "You currently have: $#{@gambler.money}"
   end
   puts "\nSpin again?"
   print '> '
   input = gets.strip
-  if input.downcase == 'y'
-    play_slots
-  else
-    main_menu
-  end
+  input.downcase == 'y' ? play_slots : main_menu
 end
 
 def play_roulette
@@ -105,7 +101,7 @@ def play_roulette
   Instructions.roulette if input.downcase == 'y'
   get_bets
   game = Roulette.new(@roulette_bet,
-                      @roulette_numbers,
+                      @player_numbers,
                       @player_zone,
                       @even_or_odd,
                       @player_color)
@@ -115,11 +111,7 @@ def play_roulette
   puts "\nPlay again?"
   print '> '
   input = gets.strip
-  if input.downcase == 'y'
-    play_roulette
-  else
-    main_menu
-  end
+  input.downcase == 'y' ? play_roulette : main_menu
 end
 
 def get_bets
@@ -127,32 +119,16 @@ def get_bets
   @roulette_bet = gets.to_i
   print 'Would you like to place a number bet for table numbers(Y/N)? '
   input = gets.chomp
-  if input.downcase == 'y'
-    select_table_numbers
-  else
-    @player_numbers = nil
-  end
+  input.downcase == 'y' ? select_table_numbers : @player_numbers = nil
   print 'Would you like to place a number bet for a certain color(Y/N)? '
   input = gets.chomp
-  if input.downcase == 'y'
-    bet_on_colors
-  else
-    @player_color = nil
-  end
+  input.downcase == 'y' ? bet_on_colors : @player_color = nil
   print 'Would you like to place a number bet for even or odd(Y/N)? '
   input = gets.chomp
-  if input.downcase == 'y'
-    even_or_odd
-  else
-    @even_or_odd = nil
-  end
+  input.downcase == 'y' ? even_or_odd : @even_or_odd = nil
   print 'Would you like to place a number bet for a certain zone(Y/N)? '
   input = gets.chomp
-  if input.downcase == 'y'
-    zone
-  else
-    @player_zone = nil
-  end
+  input.downcase == 'y' ? zone : @player_zone = nil
 end
 
 def select_table_numbers
@@ -162,7 +138,11 @@ def select_table_numbers
   selection = gets.chomp
   until @player_numbers.size == 5
     print '> '
-    @player_numbers << gets.to_i if is_valid_number?(selection)
+    if is_valid_number?(selection)
+      @player_numbers << gets.to_i
+    else
+      select_table_numbers
+    end
   end
 end
 
@@ -178,45 +158,25 @@ end
 
 def even_or_odd
   print 'Even or odd? '
-  @even_or_odd = gets.chomp
+  @even_or_odd = gets.chomp.downcase
 end
 
 def evaluate_winnings(game)
   unless @player_numbers.nil?
-    if game.table_win
-      @gambler.money += (game.bet * 35)
-      puts "table win #{@gambler.money}"
-    else
-      @gambler.money -= game.bet
-      puts "table loss #{@gambler.money}"
-    end
+    game.table_win ? (@gambler.money += (game.bet * 35)) :
+                     (@gambler.money -= game.bet)
   end
   unless @player_zone.nil?
-    if game.zone_win
-      @gambler.money += game.bet
-      puts "zone win #{@gambler.money}"
-    else
-      @gambler.money -= game.bet
-      puts "zone loss #{@gambler.money}"
-    end
+    game.zone_win ? (@gambler.money += game.bet) :
+                    (@gambler.money -= game.bet)
   end
   unless @even_or_odd.nil?
-    if game.even_odd_win
-      @gambler.money += game.bet
-      puts "even odd win #{@gambler.money}"
-    else
-      @gambler.money -= game.bet
-      puts "even odd loss #{@gambler.money}"
-    end
+    game.even_odd_win ? (@gambler.money += game.bet) :
+                        (@gambler.money -= game.bet)
   end
   unless @player_color.nil?
-    if game.color_win
-      @gambler.money += game.bet
-      puts "color win #{@gambler.money}"
-    else
-      @gambler.money -= game.bet
-      puts "color loss #{@gambler.money}"
-    end
+    game.color_win ? (@gambler.money += game.bet) :
+                     (@gambler.money -= game.bet)
   end
 end
 
