@@ -173,11 +173,8 @@ def select_table_numbers
   selection = gets.chomp
   until @player_numbers.size == 5
     print '> '
-    if is_valid_number?(selection)
-      @player_numbers << gets.to_i
-    else
-      select_table_numbers
-    end
+    is_valid_number?(selection) ? (@player_numbers << gets.to_i) :
+                                   select_table_numbers
   end
 end
 
