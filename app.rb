@@ -18,16 +18,26 @@ def intro
   puts '"May I see some Identification please?"'
   print 'Enter your name: '
   name = gets.strip.capitalize
-  print 'Enter your age: '
-  age = gets.to_i
-  if age < 21
+  validate_age
+  if @age < 21
     puts 'Sorry, but you must be 21 or older to enter.'
     exit
   else
     AnsciiArt.intro_art
     puts "Welcome to the ruby casino, #{name}!"
-    @gambler = Gambler.new(name, age)
+    @gambler = Gambler.new(name, @age)
   end
+end
+
+def validate_age
+  print 'Enter your age: '
+  input = gets.chomp
+  pattern = /[0-9]|[0-9][0-9]/
+  valid_age = pattern.match?(input)
+  # is age is valid and is a number @age = input to int. Otherwise validate age
+  valid_age ? is_valid_number?(input) ? @age = input.to_i :
+                                        validate_age :
+                                        validate_age
 end
 
 def main_menu
@@ -194,7 +204,7 @@ def bet_on_colors
 end
 
 def zone
-  puts "Zones are: 1) 1-12\n2) 13-22\n3) 23-34"
+  puts "Zones are: \n1) 1-12\n2) 13-22\n3) 23-34"
   print 'Which zone would you like to bet on?(1, 2, or 3): '
   input = gets.chomp
   pattern = /[1-3]/
