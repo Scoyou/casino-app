@@ -139,7 +139,7 @@ end
 def get_bets
   set_bet_amount
   place_table_bet
-  place_number_bet
+  place_color_bet
   place_even_odd_bet
   place_zone_bet
 end
@@ -162,12 +162,12 @@ def place_table_bet
                             place_table_bet
 end
 
-def place_number_bet
+def place_color_bet
   print 'Would you like to place a number bet for a certain color(Y/N)? '
   input = gets.chomp
   input.is_y_or_n? ? (input.downcase == 'y' ? bet_on_colors :
                             @player_color = nil) :
-                            place_number_bet
+                            place_color_bet
 end
 
 def place_even_odd_bet
@@ -198,7 +198,7 @@ def select_table_numbers
 end
 
 def bet_on_colors
-  print 'Please type a color (red, green, or black):'
+  print 'Please type a color (red, green, or black): '
   input = gets.chomp.downcase
   pattern = /black|red|green/
   valid = pattern.match?(input) ? (@player_numbers = input) : false
