@@ -10,11 +10,13 @@
 
 require 'pry'
 require_relative '../anscii_art'
+require_relative '../instructions'
 require_relative 'gambler'
 require_relative 'slots'
-require_relative '../instructions'
 require_relative 'roulette'
 require_relative 'string'
+require_relative 'blackjack'
+require_relative 'craps'
 
 class RubyCasino
   attr_accessor :gambler
@@ -81,7 +83,7 @@ class RubyCasino
   end
 
   def list_games
-    puts "1) Slots\n2) Roulette"
+    puts "1) Slots\n2) Roulette\n3) Blackjack\n4) Craps"
   end
 
   def player_game_selection(choice)
@@ -92,6 +94,8 @@ class RubyCasino
       @gambler.out_of_money? ? (puts 'You dont have any money left!') : play_roulette
     when 3
       @gambler.out_of_money? ? (puts 'You dont have any money left!') : play_blackjack
+    when 4
+      @gambler.out_of_money? ? (puts 'You dont have any money left!') : play_craps
     else
       puts 'Invalid selection'
     end
@@ -133,6 +137,12 @@ class RubyCasino
     ask_to_play_again('blackjack')
   end
 
+  def play_craps
+    craps = Craps.new
+    craps.game
+    ask_to_play_again('craps')
+  end
+
   def evaluate_roulette_winnings(game)
     unless game.player_numbers.nil?
            game.table_win ? (@gambler.money += (game.bet * 35)) :
@@ -164,6 +174,8 @@ class RubyCasino
         input.downcase == 'y' ? play_roulette : main_menu
       when 'blackjack'
         input.downcase == 'y' ? play_blackjack : main_menu
+      when 'craps'
+        input.downcase == 'y' ? play_craps : main_menu
       end
     else
       ask_to_play_again(game)

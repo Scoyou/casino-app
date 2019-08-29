@@ -105,6 +105,7 @@
 # ---- Works below
 
 class Blackjack
+  attr_accessor :win
   def menu
     puts 'Welcome to the Game of 21 Table!'
     sleep(1)
@@ -113,12 +114,13 @@ class Blackjack
     puts '1) Play Game'
     puts '2) Bet some monies!'
     puts '3) Back to Menu'
+    options
   end
 
   def options
     options = gets.to_i
     if options == 1
-      play_game
+      new_runner
     elsif options == 2
       bet_money
     elsif options == 3
@@ -128,6 +130,7 @@ class Blackjack
     end
   end
 
+  # Not sure how to use @gambler from ruby casino here without totally changing the code
   def bet_money
     puts 'How much total money would you like to play with today? '
     cash = gets.chomp.to_i
@@ -257,6 +260,7 @@ class Blackjack
       "Dealer Wins with #{dealer_total}"
     elsif card_total > dealer_total
       "You Win with #{card_total}"
+      @win = true
     end
   end
 
@@ -284,6 +288,7 @@ class Blackjack
     if card_total == 21
       puts 'You win!!'
       return 'You Win!!'
+      @win = true
     end
     if card_total > 21
       puts 'You Bust!'
@@ -291,7 +296,10 @@ class Blackjack
     end
     dealer_flip(dealer_hand)
     dealer_total = dealer_hits?(dealer_hand)
-    return 'You Win!' if dealer_total > 21
+    if dealer_total > 21
+      return 'You Win!'
+      @win = true
+    end
 
     winner?(dealer_total, card_total)
   end
