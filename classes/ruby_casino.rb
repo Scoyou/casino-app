@@ -7,6 +7,8 @@
 # Player places bet and wins / loses (hint: rand)
 # Player's bankroll goes up and down with wins and losses
 
+
+require 'pry'
 require_relative '../anscii_art'
 require_relative 'gambler'
 require_relative 'slots'
@@ -88,6 +90,8 @@ class RubyCasino
       @gambler.out_of_money? ? (puts 'You dont have any money left!') : play_slots
     when 2
       @gambler.out_of_money? ? (puts 'You dont have any money left!') : play_roulette
+    when 3
+      @gambler.out_of_money? ? (puts 'You dont have any money left!') : play_blackjack
     else
       puts 'Invalid selection'
     end
@@ -108,6 +112,46 @@ class RubyCasino
                               ask_to_play_again('slots')
   end
 
+  def play_roulette
+    puts 'Thanks for choosing Roulette!'
+    print 'Would you like to view the instructions(Y/N)? '
+    input = gets.chomp
+    puts "\n"
+    Instructions.roulette if input.downcase == 'y'
+
+    game = Roulette.new
+    game.spin_wheel
+    evaluate_roulette_winnings(game)
+    puts "money after winnings is #{@gambler.money}"
+    @gambler.out_of_money? ? (puts 'You dont have any money left!') :
+                              ask_to_play_again('roulette')
+  end
+
+  def play_blackjack
+    blackjack = Blackjack.new
+    blackjack.menu
+    ask_to_play_again('blackjack')
+  end
+
+  def evaluate_roulette_winnings(game)
+    unless game.player_numbers.nil?
+           game.table_win ? (@gambler.money += (game.bet * 35)) :
+                       (@gambler.money -= game.bet)
+    end
+    unless game.player_zone.nil?
+           game.zone_win ? (@gambler.money += game.bet) :
+                      (@gambler.money -= game.bet)
+    end
+    unless game.even_or_odd.nil?
+           game.even_odd_win ? (@gambler.money += game.bet) :
+                          (@gambler.money -= game.bet)
+    end
+    unless game.player_color.nil?
+           game.color_win ? (@gambler.money += game.bet) :
+                       (@gambler.money -= game.bet)
+    end
+  end
+
   def ask_to_play_again(game)
     puts "\nPlay again?"
     print '> '
@@ -118,133 +162,11 @@ class RubyCasino
         input.downcase == 'y' ? play_slots : main_menu
       when 'roulette'
         input.downcase == 'y' ? play_roulette : main_menu
+      when 'blackjack'
+        input.downcase == 'y' ? play_blackjack : main_menu
       end
     else
       ask_to_play_again(game)
-    end
-  end
-
-  def play_roulette
-    puts 'Thanks for choosing Roulette!'
-    print 'Would you like to view the instructions(Y/N)? '
-    input = gets.chomp
-    puts "\n"
-    Instructions.roulette if input.downcase == 'y'
-    get_bets
-    game = Roulette.new(@roulette_bet,
-                        @player_numbers,
-                        @player_zone,
-                        @even_or_odd,
-                        @player_color)
-    game.spin_wheel
-    evaluate_winnings(game)
-    puts "money after winnings is #{@gambler.money}"
-    @gambler.out_of_money? ? (puts 'You dont have any money left!') :
-                              ask_to_play_again('roulette')
-  end
-
-  def get_bets
-    set_bet_amount
-    place_table_bet
-    place_color_bet
-    place_even_odd_bet
-    place_zone_bet
-  end
-
-  def set_bet_amount
-    print 'How much would you like to bet? '
-    input = gets.chomp
-    input.is_valid_number? ? (@roulette_bet = input.to_i) : set_bet_amount
-  end
-
-  def place_table_bet
-    print 'Would you like to place a number bet for table numbers(Y/N)? '
-    input = gets.chomp
-    # if input is either 'y' or 'n',
-    # check if input is 'y.' If so, call select_table_numbers.
-    # If not, set @player_numbers = nil
-    # otherwise recursive call place_table_bet
-    input.is_y_or_n? ? (input.downcase == 'y' ? select_table_numbers :
-                              @player_numbers = nil) :
-                              place_table_bet
-  end
-
-  def place_color_bet
-    print 'Would you like to place a number bet for a certain color(Y/N)? '
-    input = gets.chomp
-    input.is_y_or_n? ? (input.downcase == 'y' ? bet_on_colors :
-                              @player_color = nil) :
-                              place_color_bet
-  end
-
-  def place_even_odd_bet
-    print 'Would you like to place a number bet for even or odd(Y/N)? '
-    input = gets.chomp
-    input.is_y_or_n? ? (input.downcase == 'y' ? even_or_odd :
-                              @even_or_odd = nil) :
-                              place_even_odd_bet
-  end
-
-  def place_zone_bet
-    print 'Would you like to place a number bet for a certain zone(Y/N)? '
-    input = gets.chomp
-    input.is_y_or_n? ? (input.downcase == 'y' ? zone :
-                              @player_zone = nil) :
-                              place_zone_bet
-  end
-
-  def select_table_numbers
-    @player_numbers = []
-    puts 'Enter 6 numbers you would like to bet on: '
-    until @player_numbers.size == 6
-      print '> '
-      input = gets.chomp
-      pattern = /^[0-9]$|^[1-2][0-9]$|^3[0-6]$/
-      pattern.match?(input) ? @player_numbers << input : select_table_numbers
-    end
-  end
-
-  def bet_on_colors
-    print 'Please type a color (red, green, or black): '
-    input = gets.chomp.downcase
-    pattern = /black|red|green/
-    valid = pattern.match?(input) ? (@player_numbers = input) : false
-    bet_on_colors unless valid
-  end
-
-  def zone
-    puts "Zones are: \n1) 1-12\n2) 13-22\n3) 23-34"
-    print 'Which zone would you like to bet on?(1, 2, or 3): '
-    input = gets.chomp
-    pattern = /[1-3]/
-    valid = pattern.match?(input) ? (@player_zone = input) : false
-    zone unless valid
-  end
-
-  def even_or_odd
-    print 'Even or odd? '
-    input = gets.chomp.downcase
-    pattern = /even|odd/
-    valid = pattern.match?(input) ? (@even_or_odd = input) : false
-    even_or_odd unless valid
-  end
-
-  def evaluate_winnings(game)
-    unless @player_numbers.nil?
-      game.table_win ? (@gambler.money += (game.bet * 35)) :
-                       (@gambler.money -= game.bet)
-    end
-    unless @player_zone.nil?
-      game.zone_win ? (@gambler.money += game.bet) :
-                      (@gambler.money -= game.bet)
-    end
-    unless @even_or_odd.nil?
-      game.even_odd_win ? (@gambler.money += game.bet) :
-                          (@gambler.money -= game.bet)
-    end
-    unless @player_color.nil?
-      game.color_win ? (@gambler.money += game.bet) :
-                       (@gambler.money -= game.bet)
     end
   end
 
