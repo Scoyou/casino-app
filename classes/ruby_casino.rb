@@ -15,6 +15,12 @@ require_relative 'roulette'
 require_relative 'string'
 
 class RubyCasino
+  attr_accessor :gambler
+
+  def initialize
+    @gambler = intro
+  end
+
   def intro
     puts 'As you enter the casino you are greeted by the doorsman.'
     puts '"May I see some Identification please?"'
@@ -27,7 +33,7 @@ class RubyCasino
     else
       AnsciiArt.intro_art
       puts "Welcome to the ruby casino, #{name}!"
-      @gambler = Gambler.new(name, @age)
+      return Gambler.new(name, @age)
     end
   end
 
@@ -246,10 +252,4 @@ class RubyCasino
     puts 'Goodbye!'
     exit
   end
-end
-
-game = RubyCasino.new
-game.intro
-loop do
-  game.main_menu
 end
