@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'anscii_art'
+require_relative '../anscii_art'
 require_relative 'gambler'
 
 class Slots

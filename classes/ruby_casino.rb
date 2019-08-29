@@ -7,10 +7,10 @@
 # Player places bet and wins / loses (hint: rand)
 # Player's bankroll goes up and down with wins and losses
 
-require_relative 'anscii_art'
+require_relative '../anscii_art'
 require_relative 'gambler'
 require_relative 'slots'
-require_relative 'instructions'
+require_relative '../instructions'
 require_relative 'roulette'
 require_relative 'string'
 

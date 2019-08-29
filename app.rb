@@ -1,6 +1,6 @@
 
 
-require_relative 'ruby_casino'
+require_relative './classes/ruby_casino'
 
 game = RubyCasino.new
 game.intro
